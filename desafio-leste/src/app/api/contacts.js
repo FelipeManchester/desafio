@@ -7,7 +7,10 @@ export async function getData() {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Erro ao recuperar os dados.', error);
+    console.error(
+      'Erro ao recuperar os dados do servidor! Buscando dados locais...',
+      error,
+    );
 
     // Faz um fetch nos dados locais, caso a API tenha ultrapassado o limite diário de requisições.
     const localResponse = await fetch('/test.json');
