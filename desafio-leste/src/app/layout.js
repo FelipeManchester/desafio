@@ -16,13 +16,26 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang='pt-BR' suppressHydrationWarning={true}>
-      <body className={IBMPlexSans.className} suppressHydrationWarning={true}>
+    <html lang='pt-BR'>
+      <head>
+        <link rel='icon' href='/favicon.ico' sizes='any' />
+      </head>
+      <body className={IBMPlexSans.className}>
         <main>
           <Header />
           <Menu />
           {children}
         </main>
+        <footer className='text-center'>
+          Feito com ❤️ por{' '}
+          <a
+            href='https://linkedin.com/in/felipemanchester'
+            target='_blank'
+            className='text-font-first'
+          >
+            Felipe Manchester
+          </a>
+        </footer>
       </body>
     </html>
   );

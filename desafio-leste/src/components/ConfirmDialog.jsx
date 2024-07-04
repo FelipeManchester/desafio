@@ -23,8 +23,12 @@ const ConfirmDialog = ({ open, onClose, onConfirm }) => {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancelar</Button>
-        <Button onClick={onConfirm}>Confirmar</Button>
+        <Button className='text-font-first' onClick={onClose}>
+          Cancelar
+        </Button>
+        <Button className='text-red-500' onClick={onConfirm}>
+          Confirmar
+        </Button>
       </DialogActions>
     </Dialog>
   );

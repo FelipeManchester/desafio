@@ -20,6 +20,9 @@ module.exports = {
       fontFamily: {
         sans: ['IBM Plex Sans', 'sans-serif'],
       },
+      fontFamily: {
+        playwright: ['Playwright Colombia', 'sans-serif'],
+      },
       colors: {
         'font-first': '#009373',
         'font-second': '#FFFFFF',

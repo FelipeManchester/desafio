@@ -92,7 +92,7 @@ const ContactsGrid = ({ rows, onEdit, onDelete }) => {
     },
   ];
 
-  return <DataGrid rows={rows} columns={columns} />;
+  return <DataGrid rows={rows} columns={columns} rowHeight={70} />;
 };
 
 export default ContactsGrid;

@@ -8,6 +8,7 @@ import {
   Button,
 } from '@mui/material';
 import { getData } from '.././app/api/contacts';
+import { Clear } from '@mui/icons-material';
 
 const FilterContacts = ({ filters, onFilterChange }) => {
   const [localFilters, setLocalFilters] = useState(filters);
@@ -36,11 +37,23 @@ const FilterContacts = ({ filters, onFilterChange }) => {
     onFilterChange(localFilters);
   };
 
+  const clearFilters = () => {
+    const clearedFilters = {
+      gender: '',
+      language: '',
+      age: '',
+      birthdayMonth: '',
+    };
+    setLocalFilters(clearedFilters);
+    onFilterChange(clearedFilters);
+  };
+
   return (
     <div className='flex flex-wrap justify-between gap-4 mb-4'>
       <FormControl variant='outlined' size='small' className='w-1/6'>
         <InputLabel>Gênero</InputLabel>
         <Select
+          id='gender'
           value={localFilters.gender}
           onChange={(e) => handleChange('gender', e.target.value)}
           label='Gênero'
@@ -53,6 +66,7 @@ const FilterContacts = ({ filters, onFilterChange }) => {
       <FormControl variant='outlined' size='small' className='w-1/6'>
         <InputLabel>Idioma</InputLabel>
         <Select
+          id='language'
           value={localFilters.language}
           onChange={(e) => handleChange('language', e.target.value)}
           label='Idioma'
@@ -66,6 +80,7 @@ const FilterContacts = ({ filters, onFilterChange }) => {
         </Select>
       </FormControl>
       <TextField
+        id='idade'
         label='Idade'
         type='number'
         variant='outlined'
@@ -79,6 +94,7 @@ const FilterContacts = ({ filters, onFilterChange }) => {
       <FormControl variant='outlined' size='small' className='w-1/6'>
         <InputLabel>Mês de Aniversário</InputLabel>
         <Select
+          id='aniversario'
           value={localFilters.birthdayMonth}
           onChange={(e) => handleChange('birthdayMonth', e.target.value)}
           label='Mês de Aniversário'
@@ -91,13 +107,23 @@ const FilterContacts = ({ filters, onFilterChange }) => {
           ))}
         </Select>
       </FormControl>
-      <Button
-        variant='contained'
-        className='bg-font-first hover:bg-bg-gray hover:text-font-first'
-        onClick={applyFilters}
-      >
-        Aplicar Filtros
-      </Button>
+      <div className='flex gap-4'>
+        <Button
+          variant='contained'
+          className='bg-gray-500 text-red-400 hover:bg-gray-700 hover:text-red-700'
+          title='Limpar filtros'
+          onClick={clearFilters}
+        >
+          <Clear />
+        </Button>
+        <Button
+          variant='contained'
+          className='bg-font-first hover:bg-bg-gray hover:text-font-first'
+          onClick={applyFilters}
+        >
+          Aplicar Filtros
+        </Button>
+      </div>
     </div>
   );
 };

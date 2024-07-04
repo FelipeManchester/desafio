@@ -8,9 +8,10 @@ const Header = () => {
       href='/#'
       className='flex flex-col sm:flex-row w-full items-center sm:items-baseline justify-center'
     >
-      <Logo className='w-56 flex-shrink-0 mb-6' />
-      <h1 className='text-4xl text-font-first font-bold'>
-        <span className='text-7xl'>C</span>ontact
+      <Logo className='w-56 flex-shrink-0 mb-8' />
+      <h1 className='text-4xl text-font-first font-medium'>
+        <span className='text-7xl text-gray-500'>C</span>
+        ontact
       </h1>
     </Link>
   );
