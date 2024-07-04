@@ -6,7 +6,7 @@ const Menu = () => {
   const pathname = usePathname();
 
   return (
-    <nav className='flex gap-4'>
+    <nav className='flex gap-4 mb-10'>
       <ul className='flex gap-10'>
         <li>
           <Link

@@ -2,8 +2,11 @@ import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { IconButton } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
+import { useMediaQuery } from '@mui/material';
 
 const ContactsGrid = ({ rows, onEdit, onDelete }) => {
+  const isSmallScreen = useMediaQuery('(max-width:768px)');
+
   const columns = [
     {
       field: 'id',
@@ -22,7 +25,7 @@ const ContactsGrid = ({ rows, onEdit, onDelete }) => {
       renderCell: (params) => {
         return <img src={params.value} className='rounded-full bg-black' />;
       },
-      cellClassName: 'avatar',
+      cellClassName: 'avatar-column',
     },
     {
       field: 'firstName',
@@ -80,19 +83,31 @@ const ContactsGrid = ({ rows, onEdit, onDelete }) => {
       disableColumnMenu: true,
       resizable: false,
       renderCell: (params) => (
-        <div>
+        <div className='flex flex-col lg:block'>
           <IconButton onClick={() => onEdit(params.row)}>
-            <Edit className='text-font-first' />
+            <Edit className='text-font-first text-sm sm:text-2xl' />
           </IconButton>
           <IconButton onClick={() => onDelete(params.row)}>
-            <Delete className='text-red-700' />
+            <Delete className='text-red-700 text-sm sm:text-2xl' />
           </IconButton>
         </div>
       ),
     },
   ];
 
-  return <DataGrid rows={rows} columns={columns} rowHeight={70} />;
+  const columnVisibilityModel = {
+    avatar: !isSmallScreen,
+  };
+
+  return (
+    <DataGrid
+      rows={rows}
+      columns={columns}
+      rowHeight={70}
+      columnVisibilityModel={columnVisibilityModel}
+      className='text-xs sm:text-base'
+    />
+  );
 };
 
 export default ContactsGrid;

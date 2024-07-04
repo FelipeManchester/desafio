@@ -46,9 +46,3 @@ img {
   width: 4rem;
   margin: 0 auto;
 }
-
-@media (max-width: 768px) {
-  .avatar {
-    display: none;
-  }
-}

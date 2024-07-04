@@ -6,7 +6,7 @@ const Header = () => {
   return (
     <Link
       href='/#'
-      className='flex flex-col sm:flex-row w-full items-center sm:items-baseline justify-center'
+      className='flex flex-col sm:flex-row w-full items-center sm:items-baseline justify-center mb-14'
     >
       <Logo className='w-56 flex-shrink-0 mb-8' />
       <h1 className='text-4xl text-font-first font-medium'>

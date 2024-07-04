@@ -49,8 +49,8 @@ const FilterContacts = ({ filters, onFilterChange }) => {
   };
 
   return (
-    <div className='flex flex-wrap justify-between gap-4 mb-4'>
-      <FormControl variant='outlined' size='small' className='w-1/6'>
+    <div className='flex flex-col sm:flex-row justify-between gap-4 mb-4'>
+      <FormControl variant='outlined' size='small' className='sm:w-1/6'>
         <InputLabel>Gênero</InputLabel>
         <Select
           id='gender'
@@ -63,7 +63,7 @@ const FilterContacts = ({ filters, onFilterChange }) => {
           <MenuItem value='F'>Feminino</MenuItem>
         </Select>
       </FormControl>
-      <FormControl variant='outlined' size='small' className='w-1/6'>
+      <FormControl variant='outlined' size='small' className='sm:w-1/6'>
         <InputLabel>Idioma</InputLabel>
         <Select
           id='language'
@@ -86,12 +86,13 @@ const FilterContacts = ({ filters, onFilterChange }) => {
         variant='outlined'
         size='small'
         value={localFilters.age}
+        className='sm:w-1/6'
         onChange={(e) =>
           handleChange('age', e.target.value < 0 ? 0 : e.target.value)
         }
         InputProps={{ inputProps: { min: 0 } }}
       />
-      <FormControl variant='outlined' size='small' className='w-1/6'>
+      <FormControl variant='outlined' size='small' className='sm:w-1/6'>
         <InputLabel>Mês de Aniversário</InputLabel>
         <Select
           id='aniversario'
