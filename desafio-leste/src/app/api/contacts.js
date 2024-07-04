@@ -1,7 +1,7 @@
 export async function getData() {
   try {
     const response = await fetch(
-      'https://my.api.mockaoo.com/lestetelecom/test.json?key=f55c4060',
+      'https://my.api.mockaroso.com/lestetelecom/test.json?key=f55c4060',
     );
 
     const data = await response.json();

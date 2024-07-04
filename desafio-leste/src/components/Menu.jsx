@@ -1,12 +1,26 @@
 import Link from 'next/link';
-import React from 'react';
 
 const Menu = () => {
   return (
-    <nav>
-      <ul className='flex gap-4'>
-        <Link href={'/contatos'}>Contatos</Link>
-        <Link href={'/dashboard'}>Dashboard</Link>
+    <nav className='flex gap-4'>
+      <ul className='flex gap-10'>
+        <li>
+          <Link
+            href='/contatos'
+            className='text-2xl text-gray-800 hover:text-font-first transition duration-300 ease-in-out'
+          >
+            Contatos
+          </Link>
+        </li>
+        <li>
+          <Link
+            href='/dashboard'
+            className='text-2xl text-gray-800 hover:text-font-first
+             transition duration-300 ease-in-out'
+          >
+            Dashboard
+          </Link>
+        </li>
       </ul>
     </nav>
   );

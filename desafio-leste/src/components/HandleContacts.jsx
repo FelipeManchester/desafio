@@ -75,17 +75,16 @@ const HandleContacts = ({
     <Modal
       open={open}
       onClose={handleClose}
-      className='flex items-center justify-center'
+      className='flex justify-center items-center'
     >
-      <div className='bg-white p-4 rounded'>
+      <div className='bg-white p-4 rounded w-1/3'>
         <h2>{selectedContact ? 'Editar contato' : 'Adicionar novo contato'}</h2>
-        <form className='space-y-4'>
+        <form className='space-y-5 flex flex-col'>
           <TextField
             label='Avatar'
             name='avatar'
             value={contact.avatar}
             onChange={handleChange}
-            fullWidth
             margin='normal'
           />
           <TextField
@@ -93,26 +92,26 @@ const HandleContacts = ({
             name='firstName'
             value={contact.firstName}
             onChange={handleChange}
-            fullWidth
             margin='normal'
+            required
           />
           <TextField
             label='Sobrenome'
             name='lastName'
             value={contact.lastName}
             onChange={handleChange}
-            fullWidth
             margin='normal'
+            required
           />
           <TextField
             label='Email'
             name='email'
             value={contact.email}
             onChange={handleChange}
-            fullWidth
             margin='normal'
+            required
           />
-          <FormControl fullWidth margin='normal'>
+          <FormControl margin='normal' required>
             <InputLabel>Gênero</InputLabel>
             <Select
               label='Gênero'
@@ -129,8 +128,8 @@ const HandleContacts = ({
             name='language'
             value={contact.language}
             onChange={handleChange}
-            fullWidth
             margin='normal'
+            required
           />
           <TextField
             label='Data de Nascimento'
@@ -138,13 +137,17 @@ const HandleContacts = ({
             type='date'
             value={contact.birthday}
             onChange={handleChange}
-            fullWidth
             margin='normal'
+            required
             InputLabelProps={{
               shrink: true,
             }}
           />
-          <Button variant='contained' color='primary' onClick={handleSubmit}>
+          <Button
+            className='bg-font-first hover:bg-bg-gray hover:text-font-first'
+            variant='contained'
+            onClick={handleSubmit}
+          >
             {selectedContact ? 'Atualizar' : 'Adicionar'}
           </Button>
         </form>

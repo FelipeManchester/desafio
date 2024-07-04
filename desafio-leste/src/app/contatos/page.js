@@ -1,19 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { DataGrid } from '@mui/x-data-grid';
-import {
-  CircularProgress,
-  Button,
-  IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContentText,
-  DialogContent,
-  DialogActions,
-} from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
-import HandleContacts from '../../components/handleContacts';
+import { CircularProgress, Button, IconButton } from '@mui/material';
+import HandleContacts from '../../components/HandleContacts';
+import FilterContacts from '../../components/FilterContacts';
+import ConfirmDialog from '../../components/ConfirmDialog';
+import ContactsData from '../../components/ContactsData';
 import { getData } from '../api/contacts';
 
 const ContatosPage = () => {
@@ -23,26 +15,56 @@ const ContatosPage = () => {
   const [selectedContact, setSelectedContact] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [contactToDelete, setContactToDelete] = useState(null);
+  const [filters, setFilters] = useState({
+    gender: '',
+    language: '',
+    age: '',
+    birthdayMonth: '',
+  });
 
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await getData();
-      const contactList = data.map((contact) => ({
-        id: contact.id,
-        avatar: contact.avatar,
-        firstName: contact.first_name,
-        lastName: contact.last_name,
-        email: contact.email,
-        gender: contact.gender,
-        language: contact.language,
-        birthday: contact.birthday,
-      }));
-      setRows(contactList);
+    const storedContacts = localStorage.getItem('contacts');
+    if (storedContacts) {
+      const parsedContacts = JSON.parse(storedContacts);
+      setRows(parsedContacts);
       setLoading(false);
-    };
+    } else {
+      const fetchData = async () => {
+        const data = await getData();
+        const contactList = data.map((contact) => ({
+          id: contact.id,
+          avatar: contact.avatar,
+          firstName: contact.first_name,
+          lastName: contact.last_name,
+          email: contact.email,
+          gender: contact.gender,
+          language: contact.language,
+          birthday: contact.birthday,
+          age: calculateAge(contact.birthday),
+          birthdayMonth: new Date(contact.birthday).getMonth() + 1,
+        }));
+        setRows(contactList);
+        localStorage.setItem('contacts', JSON.stringify(contactList));
+        setLoading(false);
+      };
 
-    fetchData();
+      fetchData();
+    }
   }, []);
+
+  const calculateAge = (birthday) => {
+    const birthDate = new Date(birthday);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+    return age;
+  };
 
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => {
@@ -51,9 +73,16 @@ const ContatosPage = () => {
   };
 
   const handleAddContact = (newContact) => {
+    const newContactWithAge = {
+      ...newContact,
+      age: calculateAge(newContact.birthday),
+      birthdayMonth: new Date(newContact.birthday).getMonth() + 1,
+    };
     setRows((prevRows) => {
       const newId = prevRows.length ? prevRows[prevRows.length - 1].id + 1 : 1;
-      return [...prevRows, { id: newId, ...newContact }];
+      const updatedRows = [...prevRows, { id: newId, ...newContactWithAge }];
+      localStorage.setItem('contacts', JSON.stringify(updatedRows));
+      return updatedRows;
     });
     handleCloseModal();
   };
@@ -64,16 +93,27 @@ const ContatosPage = () => {
   };
 
   const handleUpdateContact = (updatedContact) => {
-    setRows((prevRows) =>
-      prevRows.map((row) =>
-        row.id === updatedContact.id ? updatedContact : row,
-      ),
-    );
+    const updatedContactWithAge = {
+      ...updatedContact,
+      age: calculateAge(updatedContact.birthday),
+      birthdayMonth: new Date(updatedContact.birthday).getMonth() + 1,
+    };
+    setRows((prevRows) => {
+      const updatedRows = prevRows.map((row) =>
+        row.id === updatedContactWithAge.id ? updatedContactWithAge : row,
+      );
+      localStorage.setItem('contacts', JSON.stringify(updatedRows));
+      return updatedRows;
+    });
     handleCloseModal();
   };
 
   const handleRemoveContact = (id) => {
-    setRows((prevRows) => prevRows.filter((row) => row.id !== id));
+    setRows((prevRows) => {
+      const updatedRows = prevRows.filter((row) => row.id !== id);
+      localStorage.setItem('contacts', JSON.stringify(updatedRows));
+      return updatedRows;
+    });
     handleCloseDialog();
   };
 
@@ -91,93 +131,19 @@ const ContatosPage = () => {
     handleRemoveContact(contactToDelete.id);
   };
 
-  const columns = [
-    {
-      field: 'id',
-      headerName: 'ID',
-      width: 50,
-      sortable: false,
-      disableColumnMenu: true,
-      resizable: false,
-    },
-    {
-      field: 'avatar',
-      headerName: '',
-      sortable: false,
-      disableColumnMenu: true,
-      resizable: false,
-      renderCell: (params) => {
-        return <img src={params.value} className='rounded-full bg-black' />;
-      },
-    },
-    {
-      field: 'firstName',
-      headerName: 'Nome',
-      width: 130,
-      sortable: false,
-      disableColumnMenu: true,
-      resizable: false,
-    },
-    {
-      field: 'lastName',
-      headerName: 'Sobrenome',
-      width: 150,
-      sortable: false,
-      disableColumnMenu: true,
-      resizable: false,
-    },
-    {
-      field: 'email',
-      headerName: 'E-mail',
-      width: 240,
-      sortable: false,
-      disableColumnMenu: true,
-      resizable: false,
-    },
-    {
-      field: 'gender',
-      headerName: 'Gênero',
-      width: 80,
-      sortable: false,
-      disableColumnMenu: true,
-      resizable: false,
-    },
-    {
-      field: 'language',
-      headerName: 'Idioma',
-      width: 150,
-      sortable: false,
-      disableColumnMenu: true,
-      resizable: false,
-    },
-    {
-      field: 'birthday',
-      headerName: 'Data de Nascimento',
-      width: 150,
-      sortable: false,
-      disableColumnMenu: true,
-      resizable: false,
-    },
-    {
-      field: 'actions',
-      headerName: '',
-      sortable: false,
-      width: 100,
-      sortable: false,
-      disableColumnMenu: true,
-      resizable: false,
-      renderCell: (params) => (
-        <div>
-          <IconButton onClick={() => handleEditContact(params.row)}>
-            <Edit className='text-font-first' />
-          </IconButton>
-          <IconButton onClick={() => handleOpenDialog(params.row)}>
-            <Delete className='text-red-700' />
-          </IconButton>
-        </div>
-      ),
-    },
-  ];
+  const handleFilterChange = (newFilters) => {
+    setFilters(newFilters);
+  };
+
+  const filteredRows = rows.filter((row) => {
+    const { gender, language, age, birthdayMonth } = filters;
+    return (
+      (!gender || row.gender === gender) &&
+      (!language || row.language === language) &&
+      (!age || row.age === Number(age)) &&
+      (!birthdayMonth || row.birthdayMonth === Number(birthdayMonth))
+    );
+  });
 
   if (loading) {
     return (
@@ -190,12 +156,12 @@ const ContatosPage = () => {
   }
 
   return (
-    <div>
+    <div className='animate-animeLeft'>
       <div className='flex justify-end mb-3'>
         <Button
           variant='contained'
           onClick={handleOpenModal}
-          className='bg-font-first  hover:bg-bg-gray hover:text-font-first'
+          className='bg-font-first hover:bg-bg-gray hover:text-font-first'
         >
           Adicionar Contato
         </Button>
@@ -207,25 +173,18 @@ const ContatosPage = () => {
         updateContact={handleUpdateContact}
         selectedContact={selectedContact}
       />
-      <Dialog
+      <ConfirmDialog
         open={openDialog}
         onClose={handleCloseDialog}
-        aria-labelledby='alert-dialog-title'
-        aria-describedby='alert-diallg-description'
-      >
-        <DialogTitle id='alert-dialog-title'>{'Remover contato'}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id='alert-dialog-description'>
-            Você tem certeza que quer deletar esse contato?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancelar</Button>
-          <Button onClick={confirmDelete}>Confirmar</Button>
-        </DialogActions>
-      </Dialog>
+        onConfirm={confirmDelete}
+      />
+      <FilterContacts filters={filters} onFilterChange={handleFilterChange} />
       <section>
-        <DataGrid rows={rows} columns={columns} />
+        <ContactsData
+          rows={filteredRows}
+          onEdit={handleEditContact}
+          onDelete={handleOpenDialog}
+        />
       </section>
     </div>
   );
